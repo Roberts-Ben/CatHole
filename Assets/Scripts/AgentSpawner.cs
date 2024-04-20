@@ -16,12 +16,11 @@ public class AgentSpawner : MonoBehaviour
             for (int o = 0; o < 30; o++)
             {
                 Vector3 randomPoint = Vector3.zero + Random.insideUnitSphere * range;
-                randomPoint.y = 0.015f;
-                NavMeshHit hit;
-
-                if (NavMesh.SamplePosition(randomPoint, out hit, 1.0f, NavMesh.AllAreas))
+                randomPoint.y = 0.25f;
+                if (NavMesh.SamplePosition(randomPoint, out _, 1.0f, NavMesh.AllAreas))
                 {
                     GameObject newAgent = Instantiate(agentPrefab, randomPoint, Quaternion.identity, transform);
+                    newAgent.transform.GetComponentInChildren<Renderer>().material.color = Color.black;
                     newAgent.name = "Agent " + i;
                     break;
                 }

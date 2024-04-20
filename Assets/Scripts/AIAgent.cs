@@ -11,15 +11,17 @@ public class AIAgent : MonoBehaviour
     public float range;
     public float speed;
 
+    public Animator animController;
+
     public List<Vector3> wayPoints;
     private int currentWaypoint = 0;
-    
+
     void FixedUpdate()
     {
         if(!hasDestination)
         {
             gameObject.GetComponent<NavMeshAgent>().enabled = true;
-            if (GetNewDestination(transform.position, range, out targetPos))
+            if (GetNewDestination(range, out targetPos))
             {
                 agent.SetDestination(targetPos);
 
@@ -27,7 +29,7 @@ public class AIAgent : MonoBehaviour
                 currentWaypoint = 0;
                 for(int i = 1; i < agent.path.corners.Length; i++)
                 {
-                    wayPoints.Add(agent.path.corners[i]);
+                    wayPoints.Add(new Vector3(agent.path.corners[i].x, 0.25f, agent.path.corners[i].z));
                 }
                 gameObject.GetComponent<NavMeshAgent>().enabled = false;
             }
@@ -37,6 +39,8 @@ public class AIAgent : MonoBehaviour
             if (currentWaypoint < wayPoints.Count)
             {
                 transform.position = Vector3.MoveTowards(transform.position, wayPoints[currentWaypoint], speed * Time.deltaTime);
+                Vector3 targetDirection = wayPoints[currentWaypoint] - transform.position;
+                transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, targetDirection, 5f * Time.deltaTime, 0f));
 
                 if (Vector3.Distance(transform.position, wayPoints[currentWaypoint]) < 1f)
                 {
@@ -46,22 +50,22 @@ public class AIAgent : MonoBehaviour
             else
             {
                 hasDestination = false;
+                animController.SetBool("HasTarget", hasDestination);
             }
         }
     }
 
-    public bool GetNewDestination(Vector3 center, float range, out Vector3 result)
+    public bool GetNewDestination(float range, out Vector3 result)
     {
         for (int i = 0; i < 30; i++)
         {
             Vector3 randomPoint = transform.position + Random.insideUnitSphere * range;
-            randomPoint.y = 0.015f;
-            NavMeshHit hit;
-
-            if (NavMesh.SamplePosition(randomPoint, out hit, 1.0f, NavMesh.AllAreas))
+            randomPoint.y = 0.25f;
+            if (NavMesh.SamplePosition(randomPoint, out _, 1.0f, NavMesh.AllAreas))
             {
                 result = randomPoint;
                 hasDestination = true;
+                animController.SetBool("HasTarget", hasDestination);
                 return true; 
             }
         }
