@@ -1,14 +1,28 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
+using Unity.Mathematics;
+using Unity.Entities;
 
-public class AgentSpawner : MonoBehaviour
+public class AgentAuthoring : MonoBehaviour
 {
     public GameObject agentPrefab;
-    public int numberOfAgents;
-    public float range;
-    void Awake()
+    public int numberOfAgentsToSpawn;
+    public float2 spawnRange;
+}
+
+public class AgentBaker : Baker<AgentAuthoring>
+{
+    public override void Bake(AgentAuthoring authoring)
+    {
+        var agentEntity = GetEntity(TransformUsageFlags.Dynamic);
+        AddComponent(agentEntity, new AgentProperties
+        {
+            spawnRange = authoring.spawnRange,
+            numberOfAgentsToSpawn = authoring.numberOfAgentsToSpawn,
+            agentPrefab = GetEntity(authoring.agentPrefab, TransformUsageFlags.Dynamic)
+        });
+    }
+}
+    /*void Awake()
     {
 
         for(int i = 0; i < numberOfAgents; i++)
@@ -28,5 +42,4 @@ public class AgentSpawner : MonoBehaviour
                 Debug.Log("Agent: " + i + " could not spawn at" + randomPoint);
             }
         }
-    }
-}
+    }*/
