@@ -9,7 +9,7 @@ public class AgentSpawner : MonoBehaviour
 
     void Awake()
     {
-        for (int i = 0; i < numberOfAgents; i++)
+        for (int i = 0; i < numberOfAgentsToSpawn; i++)
         {
             for (int o = 0; o < 30; o++)
             {
