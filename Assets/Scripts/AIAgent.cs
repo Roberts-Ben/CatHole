@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -31,26 +30,46 @@ public class AIAgent : MonoBehaviour
                 {
                     wayPoints.Add(new Vector3(agent.path.corners[i].x, 0.25f, agent.path.corners[i].z));
                 }
-                gameObject.GetComponent<NavMeshAgent>().enabled = false;
             }
         }
         else
         {
-            if (currentWaypoint < wayPoints.Count)
+            if(gameObject.GetComponent<NavMeshAgent>().enabled)
             {
-                transform.position = Vector3.MoveTowards(transform.position, wayPoints[currentWaypoint], speed * Time.deltaTime);
-                Vector3 targetDirection = wayPoints[currentWaypoint] - transform.position;
-                transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, targetDirection, 5f * Time.deltaTime, 0f));
-
-                if (Vector3.Distance(transform.position, wayPoints[currentWaypoint]) < 1f)
+                transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, targetPos, 5f * Time.deltaTime, 0f));
+                if (Vector3.Distance(transform.position, targetPos) < 1f)
                 {
-                    currentWaypoint += 1;
+                    hasDestination = false;
                 }
             }
             else
             {
-                hasDestination = false;
-                animController.SetBool("HasTarget", hasDestination);
+                if (currentWaypoint < wayPoints.Count)
+                {
+                    transform.position = Vector3.MoveTowards(transform.position, wayPoints[currentWaypoint], speed * Time.deltaTime);
+                    Vector3 targetDirection = wayPoints[currentWaypoint] - transform.position;
+                    transform.rotation = Quaternion.LookRotation(Vector3.RotateTowards(transform.forward, targetDirection, 5f * Time.deltaTime, 0f));
+
+                    if (Vector3.Distance(transform.position, wayPoints[currentWaypoint]) < 1f)
+                    {
+                        currentWaypoint += 1;
+                    }
+                }
+                else
+                {
+                    hasDestination = false;
+                    animController.SetBool("HasTarget", hasDestination);
+                }
+            }
+        }
+
+        if (Physics.Raycast(transform.position, -Vector3.up, out RaycastHit hit, 5f))
+        {
+            Debug.DrawRay(transform.position, -Vector3.up, Color.red);
+            if(hit.transform.gameObject.CompareTag("KillPlane"))
+            {
+                Debug.Log("Caught");
+                gameObject.GetComponent<NavMeshAgent>().enabled = false;
             }
         }
     }

@@ -1,11 +1,14 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System.Collections.Generic;
 
 public class AgentSpawner : MonoBehaviour
 {
     public GameObject agentPrefab;
     public int numberOfAgentsToSpawn;
     public float range;
+
+    public List<Color> catColors;
 
     void Awake()
     {
@@ -18,7 +21,7 @@ public class AgentSpawner : MonoBehaviour
                 if (NavMesh.SamplePosition(randomPoint, out _, 1.0f, NavMesh.AllAreas))
                 {
                     GameObject newAgent = Instantiate(agentPrefab, randomPoint, Quaternion.identity, transform);
-                    newAgent.transform.GetComponentInChildren<Renderer>().material.color = Color.black;
+                    newAgent.GetComponentInChildren<Renderer>().material.color = catColors[Random.Range(0, catColors.Count)];
                     newAgent.name = "Agent " + i;
                     break;
                 }

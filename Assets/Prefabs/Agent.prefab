@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 5085131859492785467}
   m_Layer: 8
   m_Name: Agent
-  m_TagString: Agent
+  m_TagString: AwardsScore
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -65,7 +65,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 3629150520627701180}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 2
   m_Speed: 1
   m_Acceleration: 1
   avoidancePriority: 50
