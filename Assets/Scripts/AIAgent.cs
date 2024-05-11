@@ -19,7 +19,6 @@ public class AIAgent : MonoBehaviour
     {
         if(!hasDestination)
         {
-            gameObject.GetComponent<NavMeshAgent>().enabled = true;
             if (GetNewDestination(range, out targetPos))
             {
                 agent.SetDestination(targetPos);
@@ -28,11 +27,11 @@ public class AIAgent : MonoBehaviour
                 currentWaypoint = 0;
                 for(int i = 1; i < agent.path.corners.Length; i++)
                 {
-                    wayPoints.Add(new Vector3(agent.path.corners[i].x, 0.25f, agent.path.corners[i].z));
+                    wayPoints.Add(new Vector3(agent.path.corners[i].x, 0.35f, agent.path.corners[i].z));
                 }
             }
         }
-        else
+        else if(hasDestination)
         {
             if(gameObject.GetComponent<NavMeshAgent>().enabled)
             {
@@ -62,16 +61,6 @@ public class AIAgent : MonoBehaviour
                 }
             }
         }
-
-        if (Physics.Raycast(transform.position, -Vector3.up, out RaycastHit hit, 5f))
-        {
-            Debug.DrawRay(transform.position, -Vector3.up, Color.red);
-            if(hit.transform.gameObject.CompareTag("KillPlane"))
-            {
-                Debug.Log("Caught");
-                gameObject.GetComponent<NavMeshAgent>().enabled = false;
-            }
-        }
     }
 
     public bool GetNewDestination(float range, out Vector3 result)
@@ -79,7 +68,7 @@ public class AIAgent : MonoBehaviour
         for (int i = 0; i < 30; i++)
         {
             Vector3 randomPoint = transform.position + Random.insideUnitSphere * range;
-            randomPoint.y = 0.25f;
+            randomPoint.y = 0.35f;
             if (NavMesh.SamplePosition(randomPoint, out _, 1.0f, NavMesh.AllAreas))
             {
                 result = randomPoint;
@@ -91,5 +80,24 @@ public class AIAgent : MonoBehaviour
         result = Vector3.zero;
         Debug.Log("Could not find position");
         return false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.CompareTag("Hole"))
+        {
+            Debug.Log("Caught");
+            gameObject.GetComponent<NavMeshAgent>().enabled = false;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.CompareTag("Hole"))
+        {
+            Debug.Log("Escaped");
+            //gameObject.GetComponent<NavMeshAgent>().enabled = true;
+            
+        }
     }
 }

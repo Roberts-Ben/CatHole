@@ -65,7 +65,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 3629150520627701180}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 2
+  m_Radius: 0.5
   m_Speed: 1
   m_Acceleration: 1
   avoidancePriority: 50
@@ -117,7 +117,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dbeaf00990beff40870f29313d53952, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreValue: 0.1
+  scoreValue: 0.2
 --- !u!95 &-787417864340264954
 Animator:
   serializedVersion: 5

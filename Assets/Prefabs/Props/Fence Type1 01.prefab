@@ -187,7 +187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6dbeaf00990beff40870f29313d53952, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreValue: 0.2
+  scoreValue: 0.4
 --- !u!1 &1787445379556544334
 GameObject:
   m_ObjectHideFlags: 0
